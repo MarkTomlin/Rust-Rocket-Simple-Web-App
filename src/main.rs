@@ -23,11 +23,26 @@ fn index() -> Template {
         last_name: String
     }
     let context = Context {
-        first_name: String::from("Ebenezer"),
-        last_name: String::from("Don")
+        first_name: String::from("Mark"),
+        last_name: String::from("Tomlin")
     };
     Template::render("home", context)
 }
+
+#[get("/page2")] // Second html page
+fn page2() -> Template {
+    #[derive(Serialize)]
+    struct Context {
+        title: String,
+        sub_title: String
+    }
+    let context = Context {
+        title: String::from("Second page"),
+        sub_title: String::from("Cool I guess 😎")
+    };
+    Template::render("page2", context)
+}
+
 
 #[catch(404)] // 404 error page
 fn not_found(req: &Request) -> String { 
@@ -55,7 +70,7 @@ fn new_book(book_form: Form<Book>) -> String {
 fn main() {
     rocket::ignite()
       .register(catchers![not_found])
-      .mount("/", routes![index])
+      .mount("/", routes![index, page2])
       .mount("/api", routes![hello, new_book])
       .attach(Template::fairing())
       .launch();
